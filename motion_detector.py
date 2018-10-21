@@ -1,5 +1,8 @@
 import cv2, time, pandas
 from datetime import datetime
+import socket
+
+
 
 
 
@@ -16,9 +19,7 @@ while True:
     status=0
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray=cv2.GaussianBlur(gray,(21,21),0)
-    a,b,c = frame.shape
 
-    
     if first_frame is None:
         first_frame=gray
         continue
@@ -44,6 +45,20 @@ while True:
     if status_list[-1]==1 and status_list[-2]==0:
         times.append(datetime.now())
     if status_list[-1]==0 and status_list[-2]==1:
+
+        #Socket
+
+        s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+        port = 3000
+        s.bind(("0.0.0.0",port))
+        s.listen(5)
+        c,addr = s.accept()
+        t = "Alert actions required"
+        c.send(t.encode())
+        #/Socket
+
+
         times.append(datetime.now())
 
 
@@ -59,8 +74,6 @@ while True:
             times.append(datetime.now())
         break
 
-
-		
 print(status_list)
 print(times)
 
@@ -69,5 +82,8 @@ for i in range(0,len(times),2):
 
 df.to_csv("Times.csv")
 
+
+
+s.close()
 video.release()
 cv2.destroyAllWindows
