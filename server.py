@@ -1,5 +1,5 @@
-a=10
-while a>0:
+##a=10
+while true:
     import socket			 
 
     # next create a socket object
@@ -25,7 +25,7 @@ while a>0:
     #c.send(t.encode())
 
     print(c.recv(1024))
-    a=a-1
+    ##a=a-1
 
     s.close()      
 
